@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinayaka Tiffins | Administration Dashboard</title>
+    
+    <!-- Google Fonts & FontAwesome -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0f0d0b;
+            --bg-secondary: #1a1613;
+            --bg-card: #241e1a;
+            --border-color: #3b312a;
+            --text-primary: #fdfbf7;
+            --text-secondary: #a89a8f;
+            
+            --color-primary: #ff6b35;
+            --color-secondary: #f7931e;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --color-blue: #3b82f6;
+
+            --grad-primary: linear-gradient(135deg, #ff6b35 0%, #ff4b1f 100%);
+            --grad-card: linear-gradient(135deg, rgba(36, 30, 26, 0.9) 0%, rgba(26, 22, 19, 0.9) 100%);
+            
+            --border-radius: 16px;
+            --shadow-medium: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-primary);
+        }
+
+        /* ==========================================================================
+           LOGIN INTERFACE
+           ========================================================================== */
+        #adminLoginWrapper {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(255, 107, 53, 0.15), transparent 50%),
+                        linear-gradient(135deg, #0a0908 0%, #151210 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--grad-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 2.5px solid var(--color-primary);
+            margin: 0 auto 20px;
+            object-fit: cover;
+        }
+
+        .login-card h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: var(--grad-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all var(--transition-fast);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: var(--grad-primary);
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.25);
+            transition: all var(--transition-fast);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(255, 107, 53, 0.4);
+        }
+
+        /* ==========================================================================
+           MAIN DASHBOARD WRAPPER
+           ========================================================================== */
+        #adminDashboardWrapper {
+            display: none;
+        }
+
+        /* Header Navigation */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--color-primary);
+        }
+
+        .brand-name h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .brand-name span {
+            font-size: 0.7rem;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .header-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .header-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        /* Dashboard Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin: 40px 0;
+        }
+
+        .metric-card {
+            background: var(--grad-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .metric-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .icon-sales { background: linear-gradient(135deg, #10b981, #059669); }
+        .icon-orders { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .icon-active { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .icon-users { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+
+        .metric-info h3 {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        /* Tabs Navigation */
+        .admin-tabs {
+            display: flex;
+            gap: 12px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background-color: var(--bg-card);
+            color: var(--color-primary);
+        }
+
+        /* Section Layouts */
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--color-primary);
+            padding-left: 12px;
+        }
+
+        /* Table & Data Cards Container */
+        .table-container {
+            background: var(--grad-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background-color: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 107, 53, 0.02);
+        }
+
+        /* Badges & Dropdowns */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .badge-verifying { background-color: rgba(168, 154, 143, 0.15); color: var(--text-secondary); }
+        .badge-preparing { background-color: rgba(245, 158, 11, 0.15); color: var(--color-secondary); }
+        .badge-delivering { background-color: rgba(59, 130, 246, 0.15); color: var(--color-blue); }
+        .badge-completed { background-color: rgba(16, 185, 129, 0.15); color: var(--color-success); }
+
+        .status-select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: border var(--transition-fast);
+        }
+
+        .status-select:focus {
+            border-color: var(--color-primary);
+        }
+
+        .utr-code {
+            font-family: monospace;
+            background-color: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1.5px solid var(--border-color);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .items-list {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .items-list li {
+            margin-bottom: 2px;
+            color: var(--text-secondary);
+        }
+
+        .items-list li strong {
+            color: var(--text-primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes toastSlideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes toastFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+         ADMIN LOGIN VIEW
+         ========================================== -->
+    <div id="adminLoginWrapper">
+        <div class="login-card">
+            <img class="login-logo" src="assets/images/vinayaka.jpeg" onerror="this.src='https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=80';" alt="">
+            <h2>Admin Control Center</h2>
+            <p>Access persistent customer databases and manage active order lifecycles.</p>
+            
+            <div class="input-group">
+                <label for="adminUser">Username</label>
+                <input id="adminUser" class="input-field" type="text" placeholder="Enter Admin Username" value="admin">
+            </div>
+            <div class="input-group" style="margin-bottom: 30px;">
+                <label for="adminPass">Password</label>
+                <input id="adminPass" class="input-field" type="password" placeholder="Enter Password" value="vinayaka@admin">
+            </div>
+            
+            <button onclick="handleAdminLogin()" class="btn">
+                <i class="fas fa-lock-open"></i> Login Securely
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         ADMIN MAIN DASHBOARD
+         ========================================== -->
+    <div id="adminDashboardWrapper">
+        <header>
+            <div class="container header-content">
+                <div class="brand-section">
+                    <img class="brand-logo" src="assets/images/vinayaka.jpeg" onerror="this.src='https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=80';" alt="">
+                    <div class="brand-name">
+                        <h1>Vinayaka Tiffins</h1>
+                        <span>Admin Dashboard</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" onclick="window.open('/', '_blank')">
+                        <i class="fas fa-external-link-alt"></i> Customer Portal
+                    </button>
+                    <button class="header-btn" onclick="handleAdminLogout()" style="background-color: var(--color-danger); border: none; color: white;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- Business Stats Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon icon-sales"><i class="fas fa-indian-rupee-sign"></i></div>
+                    <div class="metric-info">
+                        <h3>Total Earnings</h3>
+                        <div class="metric-value" id="statsEarnings">₹0</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon icon-orders"><i class="fas fa-receipt"></i></div>
+                    <div class="metric-info">
+                        <h3>Total Orders</h3>
+                        <div class="metric-value" id="statsOrders">0</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon icon-active"><i class="fas fa-motorcycle"></i></div>
+                    <div class="metric-info">
+                        <h3>Active Queue</h3>
+                        <div class="metric-value" id="statsActive">0</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon icon-users"><i class="fas fa-users"></i></div>
+                    <div class="metric-info">
+                        <h3>Registered Members</h3>
+                        <div class="metric-value" id="statsUsers">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" id="tabBtnOrders" onclick="switchTab('orders')">
+                    <i class="fas fa-tasks"></i> Live Orders Manager
+                </button>
+                <button class="tab-btn" id="tabBtnUsers" onclick="switchTab('users')">
+                    <i class="fas fa-user-friends"></i> Customers Database
+                </button>
+                <button class="tab-btn" id="tabBtnMessages" onclick="switchTab('messages')">
+                    <i class="fas fa-comment-dots"></i> Customer Feedbacks
+                </button>
+            </div>
+
+            <!-- TAB 1: Live Orders Manager Section -->
+            <section id="sectionOrders" class="dashboard-section active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title">Order Queue Tracker</h2>
+                    <button class="header-btn" onclick="fetchOrdersData(); fetchStatsData();" title="Force Refresh Data">
+                        <i class="fas fa-sync-alt"></i> Refresh Queue
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID / Date</th>
+                                <th>Customer Name / Phone</th>
+                                <th>Delivery Address</th>
+                                <th>Tiffins Ordered</th>
+                                <th>Total Paid / UTR</th>
+                                <th>Current Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Populated dynamically by javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB 2: Users Database Section -->
+            <section id="sectionUsers" class="dashboard-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title">Registered Customer Base</h2>
+                    <button class="header-btn" onclick="fetchUsersData();" title="Force Refresh Data">
+                        <i class="fas fa-sync-alt"></i> Refresh Customers
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Joined Date</th>
+                                <th>Customer Name</th>
+                                <th>Mobile Number</th>
+                                <th>Email Address</th>
+                                <th>House Number</th>
+                                <th>GPS Coordinates (Delivery Region)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Populated dynamically by javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB 3: Customer Feedbacks Section -->
+            <section id="sectionMessages" class="dashboard-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="section-title">Customer Feedback Inbox</h2>
+                    <button class="header-btn" onclick="fetchMessagesData();" title="Force Refresh Data">
+                        <i class="fas fa-sync-alt"></i> Refresh Feedbacks
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date / Time</th>
+                                <th>Customer Name</th>
+                                <th>Mobile Number</th>
+                                <th>Message / Feedback</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messagesTableBody">
+                            <!-- Populated dynamically by javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" style="position: fixed; bottom: 30px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 10000; pointer-events: none;"></div>
+
+    <!-- Core Admin Javascript Controller -->
+    <script>
+        // Check if user session was already authenticated
+        document.addEventListener("DOMContentLoaded", () => {
+            if (sessionStorage.getItem("admin_session") === "active") {
+                revealDashboard();
+            }
+        });
+
+        function handleAdminLogin() {
+            const user = document.getElementById("adminUser").value.trim();
+            const pass = document.getElementById("adminPass").value.trim();
+
+            if (user === "admin" && pass === "vinayaka@admin") {
+                sessionStorage.setItem("admin_session", "active");
+                revealDashboard();
+                showToast("Control Center Authenticated Successfully.", "success");
+            } else {
+                showToast("Access Denied! Incorrect username or password.", "error");
+            }
+        }
+
+        function handleAdminLogout() {
+            sessionStorage.removeItem("admin_session");
+            document.getElementById("adminDashboardWrapper").style.display = "none";
+            document.getElementById("adminLoginWrapper").style.display = "flex";
+        }
+
+        function revealDashboard() {
+            document.getElementById("adminLoginWrapper").style.display = "none";
+            document.getElementById("adminDashboardWrapper").style.display = "block";
+            
+            // Initial fetches
+            fetchStatsData();
+            fetchOrdersData();
+            
+            // Set up polling interval to refresh order statuses and sales stats automatically every 5 seconds
+            setInterval(() => {
+                if (sessionStorage.getItem("admin_session") === "active") {
+                    fetchStatsData();
+                    // Always poll order count for sound notification, but only redraw if active
+                    const isOrdersTab = document.getElementById("sectionOrders").classList.contains("active");
+                    fetchOrdersData(!isOrdersTab); // silent refresh if not on active tab
+                }
+            }, 5000);
+        }
+
+        function switchTab(tabType) {
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelectorAll(".dashboard-section").forEach(sec => sec.classList.remove("active"));
+
+            if (tabType === 'orders') {
+                document.getElementById("tabBtnOrders").classList.add("active");
+                document.getElementById("sectionOrders").classList.add("active");
+                fetchOrdersData();
+            } else if (tabType === 'users') {
+                document.getElementById("tabBtnUsers").classList.add("active");
+                document.getElementById("sectionUsers").classList.add("active");
+                fetchUsersData();
+            } else {
+                document.getElementById("tabBtnMessages").classList.add("active");
+                document.getElementById("sectionMessages").classList.add("active");
+                fetchMessagesData();
+            }
+        }
+
+        // ==========================================
+        // DATA API FETCH OPERATIONS
+        // ==========================================
+
+        async function fetchStatsData() {
+            try {
+                const response = await fetch("/api/admin/stats");
+                if (response.ok) {
+                    const stats = await response.json();
+                    document.getElementById("statsEarnings").textContent = `₹${stats.totalSales}`;
+                    document.getElementById("statsOrders").textContent = stats.totalOrders;
+                    document.getElementById("statsActive").textContent = stats.activeOrders;
+                    document.getElementById("statsUsers").textContent = stats.totalUsers;
+                }
+            } catch (err) {
+                console.error("Error fetching dashboard statistics:", err);
+            }
+        }
+
+        // Cache variable to prevent flashing rows unnecessarily during polling
+        let ordersCacheJSON = "";
+        let lastOrderCount = null;
+
+        // Web Audio API Synthesis for Premium Chime Notification Tone (No files required!)
+        function playNotificationSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Note 1 (Chime base note)
+                const osc1 = audioCtx.createOscillator();
+                const gain1 = audioCtx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                gain1.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+                osc1.connect(gain1);
+                gain1.connect(audioCtx.destination);
+                osc1.start();
+                osc1.stop(audioCtx.currentTime + 0.35);
+                
+                // Note 2 (Delayed higher chime note for ding-dong effect)
+                setTimeout(() => {
+                    const osc2 = audioCtx.createOscillator();
+                    const gain2 = audioCtx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(880.00, audioCtx.currentTime); // A5
+                    gain2.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                    osc2.connect(gain2);
+                    gain2.connect(audioCtx.destination);
+                    osc2.start();
+                    osc2.stop(audioCtx.currentTime + 0.5);
+                }, 100);
+            } catch (e) {
+                console.error("Web Audio playback failed: ", e);
+            }
+        }
+
+        async function fetchOrdersData(silent = false) {
+            try {
+                const response = await fetch("/api/admin/orders");
+                if (response.ok) {
+                    const orders = await response.json();
+                    
+                    // Alert admin if a new order arrives
+                    if (lastOrderCount !== null && orders.length > lastOrderCount) {
+                        playNotificationSound();
+                        showToast(`🔔 New Tiffin Order Received: ${orders[0].orderId}`, "success");
+                    }
+                    lastOrderCount = orders.length;
+
+                    const newJSON = JSON.stringify(orders);
+                    if (silent && newJSON === ordersCacheJSON) return; // Ignore if identical
+                    ordersCacheJSON = newJSON;
+
+                    // Only redraw the table layout if the Orders tab is active
+                    if (document.getElementById("sectionOrders").classList.contains("active")) {
+                        renderOrdersTable(orders);
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching admin orders list:", err);
+            }
+        }
+
+        async function fetchUsersData() {
+            try {
+                const response = await fetch("/api/admin/users");
+                if (response.ok) {
+                    const users = await response.json();
+                    renderUsersTable(users);
+                }
+            } catch (err) {
+                console.error("Error fetching admin users list:", err);
+            }
+        }
+
+        // ==========================================
+        // UI RENDERING UTILS
+        // ==========================================
+
+        function renderOrdersTable(orders) {
+            const tbody = document.getElementById("ordersTableBody");
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 40px;">No orders found in the queue database.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => {
+                const dateObj = new Date(order.createdAt);
+                const formattedDate = dateObj.toLocaleDateString("en-IN") + " " + dateObj.toLocaleTimeString("en-IN", {hour: '2-digit', minute:'2-digit'});
+                
+                const itemsListHTML = order.items.map(item => `
+                    <li><strong>${item.name}</strong> x${item.quantity}</li>
+                `).join("");
+
+                return `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 700;">${order.orderId}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px;">${formattedDate}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: var(--color-primary);">${order.name}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);"><i class="fas fa-phone-alt"></i> ${order.phone}</div>
+                        </td>
+                        <td style="font-size: 0.85rem; max-width: 200px; white-space: normal; word-wrap: break-word;">
+                            ${order.address}
+                        </td>
+                        <td>
+                            <ul class="items-list">${itemsListHTML}</ul>
+                        </td>
+                        <td>
+                            <div style="font-weight: 900; font-size: 1.05rem;">₹${order.total}</div>
+                            <div style="font-size: 0.75rem; margin-top: 4px;"><span class="utr-code">${order.txn}</span></div>
+                        </td>
+                        <td>
+                            <span class="badge badge-${order.status.toLowerCase()}">
+                                <i class="fas ${getStatusIcon(order.status)}"></i> ${order.status}
+                            </span>
+                        </td>
+                        <td>
+                            <select class="status-select" onchange="updateOrderStatus('${order.orderId}', this.value)">
+                                <option value="Verifying" ${order.status === 'Verifying' ? 'selected' : ''}>Verify UTR</option>
+                                <option value="Preparing" ${order.status === 'Preparing' ? 'selected' : ''}>Cooking/Preparing</option>
+                                <option value="Delivering" ${order.status === 'Delivering' ? 'selected' : ''}>Out for Delivery</option>
+                                <option value="Completed" ${order.status === 'Completed' ? 'selected' : ''}>Delivered / Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function renderUsersTable(users) {
+            const tbody = document.getElementById("usersTableBody");
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 40px;">No registered members found in the user database.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => {
+                const dateObj = new Date(user.registeredAt);
+                const formattedDate = dateObj.toLocaleDateString("en-IN");
+
+                return `
+                    <tr>
+                        <td style="font-size: 0.85rem; color: var(--text-secondary);">${formattedDate}</td>
+                        <td style="font-weight: 700; color: var(--color-primary);">${user.name}</td>
+                        <td style="font-weight: 600;"><i class="fas fa-phone-alt" style="font-size:0.8rem; color: var(--text-secondary);"></i> ${user.phone}</td>
+                        <td style="font-size: 0.85rem;">${user.email}</td>
+                        <td style="font-size: 0.85rem;">${user.house || "-"}</td>
+                        <td style="font-family: monospace; font-size: 0.8rem; color: var(--text-secondary); max-width: 250px; white-space: normal;">
+                            ${user.address}
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'Verifying': return 'fa-clock';
+                case 'Preparing': return 'fa-fire-burner';
+                case 'Delivering': return 'fa-motorcycle';
+                case 'Completed': return 'fa-check';
+                default: return 'fa-circle-question';
+            }
+        }
+
+        // ==========================================
+        // STATUS API MUTATIONS
+        // ==========================================
+
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                const response = await fetch("/api/admin/orders/status", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ orderId, status: newStatus })
+                });
+
+                if (response.ok) {
+                    fetchStatsData();
+                    fetchOrdersData();
+                    showToast(`Status updated successfully to: ${newStatus}`, "success");
+                    console.log(`[Admin Control] Set status of order ${orderId} to: ${newStatus}`);
+                } else {
+                    const err = await response.json();
+                    showToast("Failed to update status: " + err.error, "error");
+                }
+            } catch (err) {
+                console.error("Error updating order status:", err);
+                showToast("Connection failed! Unable to reach backend server.", "error");
+            }
+        }
+
+        // ==========================================
+        // FEEDBACK / MESSAGES API FETCH OPERATIONS
+        // ==========================================
+
+        async function fetchMessagesData() {
+            try {
+                const response = await fetch("/api/admin/messages");
+                if (response.ok) {
+                    const messages = await response.json();
+                    renderMessagesTable(messages);
+                }
+            } catch (err) {
+                console.error("Error fetching admin messages list:", err);
+            }
+        }
+
+        function renderMessagesTable(messages) {
+            const tbody = document.getElementById("messagesTableBody");
+            if (messages.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 40px;">No customer feedbacks or messages found in the database.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = messages.map(msg => {
+                const dateObj = new Date(msg.createdAt);
+                const formattedDate = dateObj.toLocaleDateString("en-IN") + " " + dateObj.toLocaleTimeString("en-IN", {hour: '2-digit', minute:'2-digit'});
+
+                return `
+                    <tr>
+                        <td style="font-size: 0.85rem; color: var(--text-secondary);">${formattedDate}</td>
+                        <td style="font-weight: 700; color: var(--color-primary);">${msg.name}</td>
+                        <td style="font-weight: 600;">
+                            ${msg.phone ? `<i class="fas fa-phone-alt" style="font-size:0.8rem; color: var(--text-secondary);"></i> ` + msg.phone : "-"}
+                        </td>
+                        <td style="white-space: normal; word-wrap: break-word; max-width: 400px; font-size: 0.95rem;">
+                            ${msg.message}
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+        }
+
+        // ==========================================
+        // TOAST NOTIFICATION UTILITY
+        // ==========================================
+
+        function showToast(message, type = "success") {
+            const container = document.getElementById("toastContainer");
+            if (!container) return;
+
+            const toast = document.createElement("div");
+            toast.style.pointerEvents = "auto";
+            toast.style.background = "rgba(36, 30, 26, 0.95)";
+            toast.style.border = "1px solid var(--border-color, #3b312a)";
+            toast.style.color = "var(--text-primary, #fdfbf7)";
+            toast.style.padding = "12px 20px";
+            toast.style.borderRadius = "12px";
+            toast.style.boxShadow = "0 8px 30px rgba(0,0,0,0.5)";
+            toast.style.fontFamily = "'Outfit', sans-serif";
+            toast.style.fontSize = "0.9rem";
+            toast.style.fontWeight = "600";
+            toast.style.display = "flex";
+            toast.style.alignItems = "center";
+            toast.style.gap = "10px";
+            toast.style.minWidth = "280px";
+            toast.style.maxWidth = "350px";
+            toast.style.animation = "toastSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards";
+            
+            let icon = "fa-info-circle";
+            let color = "#ff6b35";
+            if (type === "success") {
+                icon = "fa-check-circle";
+                color = "#10b981";
+            } else if (type === "error") {
+                icon = "fa-exclamation-circle";
+                color = "#ef4444";
+            } else if (type === "warning") {
+                icon = "fa-exclamation-triangle";
+                color = "#f59e0b";
+            }
+
+            toast.innerHTML = `
+                <i class="fas ${icon}" style="color: ${color}; font-size: 1.1rem; flex-shrink: 0;"></i>
+                <span style="flex-grow: 1;">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = "toastFadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards";
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# Zero-dependency Python Backend Server
+# No external pip packages needed

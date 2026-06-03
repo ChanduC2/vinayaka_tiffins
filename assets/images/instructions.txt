@@ -1,0 +1,15 @@
+========================================================================
+VINAYAKA TIFFINS - LOCAL ASSETS INSTRUCTIONS
+========================================================================
+
+Please place your local images and videos in this folder:
+Location: C:\Users\veera\.gemini\antigravity\scratch\vinayaka_tiffins\assets\images\
+
+Required files to match the layout:
+1. "vinayaka.jpeg" - Your main kitchen logo (replaces the top header logo and membership card brand logo).
+2. "intro.mp4" - Your circular splash video that plays when you first load the website.
+
+How it works:
+- The website is coded to check this directory first for assets. 
+- If the files are present, they will display beautifully.
+- If they are missing, it will automatically fallback to high-quality internet placeholder images from Unsplash.

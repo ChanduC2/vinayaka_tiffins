@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Optimization -->
+    <title>Vinayaka Tiffins | Fresh, Hot & Home-Style Breakfast Delivery</title>
+    <meta name="description" content="Order fresh, hot, and home-style tiffins in Mandapeta. Free delivery within 20-30 minutes. Build your customized weekly breakfast planner today!">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ==========================================
+         INTRO SPLASH SCREEN
+         ========================================== -->
+    <div id="videoSplash">
+        <div class="video-circle">
+            <!-- Circular intro video with error fallback to static image -->
+            <video id="introVideo" autoplay muted playsinline loop>
+                <source src="assets/images/intro.mp4" type="video/mp4">
+                <source src="https://media.istockphoto.com/id/2062853660/video/closeup-shot-of-dosa-cooking-south-indian-dish-with-mashed-potatoes-and-vegetables-on-a-flat.mp4?s=mp4-640x640-is&k=20&c=VZk-peqRrXZ_rEbGuwh7UqJF6raDkDwTBgmljmUFgUc=" type="video/mp4">
+            </video>
+            <img id="introLogo" src="assets/images/vinayaka.jpeg" onerror="this.src='https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300';" alt="Vinayaka Tiffins Logo">
+        </div>
+        <h1 class="intro-title">Vinayaka Tiffins</h1>
+        <p class="intro-sub">Fresh • Hot • Home-Style</p>
+    </div>
+
+    <!-- ==========================================
+         WHATSAPP FLOATING BUTTON
+         ========================================== -->
+    <a href="https://wa.me/917396444654" class="whatsapp-float" target="_blank" aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ==========================================
+         HEADER / NAVIGATION
+         ========================================== -->
+    <header>
+        <div class="container header-content">
+            <!-- Brand Logo -->
+            <div class="logo-wrapper">
+                <img class="logo-img" src="assets/images/vinayaka.jpeg" onerror="this.src='https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=80';" alt="Vinayaka Tiffins">
+                <div class="logo-text">
+                    <h1>Vinayaka Tiffins</h1>
+                    <span>Delivered Fresh</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links (Hidden on Mobile) -->
+            <nav id="desktopNav">
+                <a href="#menuSection" class="active">Today's Menu</a>
+                <a href="#weeklySection">Weekly Planner</a>
+                <a href="#mapsSection">Find Us</a>
+                <a href="#contactSection">Contact</a>
+            </nav>
+
+            <!-- Actions Area -->
+            <div class="header-actions">
+                <!-- Theme Toggle -->
+                <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+
+                <!-- Profile Widget -->
+                <div id="userProfileWidget" style="display: none;">
+                    <div class="avatar-circle" id="profileAvatar">👤</div>
+                    <div class="profile-widget-text">
+                        <div class="profile-widget-name" id="profileWidgetName">Guest</div>
+                        <div class="profile-widget-phone" id="profileWidgetPhone">No number</div>
+                    </div>
+                </div>
+                <!-- Login/Register Trigger (Visible when logged out) -->
+                <button class="btn btn-secondary" id="loginHeaderBtn" onclick="openLoginModal()">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+
+                <!-- Cart Button -->
+                <button class="cart-trigger" onclick="openCartPanel()">
+                    <i class="fas fa-shopping-basket"></i>
+                    <span>Cart</span>
+                    <span class="cart-badge" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ==========================================
+             HERO SECTION
+             ========================================== -->
+        <section class="hero">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="https://media.istockphoto.com/id/2062853660/video/closeup-shot-of-dosa-cooking-south-indian-dish-with-mashed-potatoes-and-vegetables-on-a-flat.mp4?s=mp4-640x640-is&k=20&c=VZk-peqRrXZ_rEbGuwh7UqJF6raDkDwTBgmljmUFgUc=" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+            
+            <div class="hero-content">
+                <span class="hero-badge"><i class="fas fa-motorcycle"></i> Fast & Hot Delivery</span>
+                <h2 class="hero-title">Fresh, Hot & Home-Style Tiffins</h2>
+                <p class="hero-subtitle">Mouth-watering South Indian breakfast served 6:00 AM – 11:00 AM daily.</p>
+                
+                <div class="hero-meta">
+                    <div class="hero-meta-item">
+                        <i class="fas fa-shipping-fast" style="color: var(--color-primary);"></i>
+                        <span>Free Delivery within Mandapeta</span>
+                    </div>
+                    <div class="hero-meta-item">
+                        <i class="fas fa-clock" style="color: var(--color-secondary);"></i>
+                        <span>Ready in 20–30 Mins</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             TODAY'S MENU SECTION
+             ========================================== -->
+        <section id="menuSection" class="section menu-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-accent-title">Made with love</span>
+                    <h2 class="section-title">Today's Hot Menu</h2>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="menu-filters" id="categoryFilters">
+                    <button class="filter-btn active" data-filter="all">All Items</button>
+                    <button class="filter-btn" data-filter="bestseller">🔥 Bestsellers</button>
+                    <button class="filter-btn" data-filter="light">Light Breakfast</button>
+                    <button class="filter-btn" data-filter="special">Specials</button>
+                </div>
+
+                <!-- Food Menu Grid -->
+                <div class="menu-grid" id="menuGrid">
+                    <!-- Items generated by JavaScript dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             WEEKLY PLANNER PROMO SECTION
+             ========================================== -->
+        <section id="weeklySection" class="section weekly-section">
+            <div class="container">
+                <div class="glass-panel weekly-promo-card">
+                    <div class="weekly-promo-text">
+                        <span class="section-accent-title">Never Skip Breakfast</span>
+                        <h3>Weekly Tiffin Planner</h3>
+                        <p>Customize your breakfast schedule for every day of the week. Save your favorite tiffins and we will automatically load them and prepare your order for confirmation daily!</p>
+                        
+                        <div class="weekly-promo-bullets">
+                            <div class="weekly-bullet">
+                                <span>1</span>
+                                <div>Select days</div>
+                            </div>
+                            <div class="weekly-bullet">
+                                <span>2</span>
+                                <div>Choose your tiffin</div>
+                            </div>
+                            <div class="weekly-bullet">
+                                <span>3</span>
+                                <div>Auto-fill cart daily</div>
+                            </div>
+                            <div class="weekly-bullet">
+                                <span>4</span>
+                                <div>Get healthy meals</div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="openWeeklyPlanner()" style="margin-top: 32px;">
+                            <i class="fas fa-calendar-alt"></i> Configure Weekly Plan
+                        </button>
+                    </div>
+
+                    <div class="weekly-promo-visual">
+                        <div class="calendar-illustration">
+                            <div class="calendar-ill-header">My Scheduled Week</div>
+                            <div class="calendar-ill-row">
+                                <span class="calendar-ill-day">Monday</span>
+                                <span class="calendar-ill-food">Idly (4 Pcs)</span>
+                            </div>
+                            <div class="calendar-ill-row">
+                                <span class="calendar-ill-day">Wednesday</span>
+                                <span class="calendar-ill-food">Plain Dosa</span>
+                            </div>
+                            <div class="calendar-ill-row">
+                                <span class="calendar-ill-day">Friday</span>
+                                <span class="calendar-ill-food">Pesarattu</span>
+                            </div>
+                            <div class="calendar-ill-row">
+                                <span class="calendar-ill-day">Saturday</span>
+                                <span class="calendar-ill-food">Crispy Vada</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             MAPS SECTION
+             ========================================== -->
+        <section id="mapsSection" class="section map-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-accent-title">Locate Us</span>
+                    <h2 class="section-title">Our Kitchen Location</h2>
+                </div>
+                
+                <div class="map-wrapper">
+                    <iframe class="map-frame"
+                        src="https://www.google.com/maps?q=16.865866,81.926911&output=embed"
+                        allowfullscreen=""
+                        loading="lazy"
+                        title="Vinayaka Tiffins Kitchen Location">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             CONTACT SECTION
+             ========================================== -->
+        <section id="contactSection" class="section contact-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-accent-title">Get in touch</span>
+                    <h2 class="section-title">Contact & Support</h2>
+                </div>
+
+                <div class="contact-grid">
+                    <!-- Info Panel -->
+                    <div class="contact-info-card glass-panel">
+                        <h3 class="contact-info-title">Reach Out to Us</h3>
+                        <div class="contact-info-list">
+                            <div class="contact-info-item">
+                                <div class="contact-info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="contact-info-details">
+                                    <h4>Our Kitchen</h4>
+                                    <p>Mandapeta, Andhra Pradesh, India</p>
+                                </div>
+                            </div>
+                            <div class="contact-info-item">
+                                <div class="contact-info-icon"><i class="fas fa-phone-alt"></i></div>
+                                <div class="contact-info-details">
+                                    <h4>Phone Number</h4>
+                                    <p>+91 73964 44654</p>
+                                </div>
+                            </div>
+                            <div class="contact-info-item">
+                                <div class="contact-info-icon"><i class="fas fa-clock"></i></div>
+                                <div class="contact-info-details">
+                                    <h4>Business Hours</h4>
+                                    <p>Daily: 6:00 AM – 11:00 AM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="contact-form-wrapper glass-panel">
+                        <h3 class="contact-form-title">Send a Message</h3>
+                        <form id="contactForm">
+                            <div class="contact-form-grid">
+                                <input id="c_name" class="input-field" type="text" placeholder="Your Full Name" required>
+                                <input id="c_phone" class="input-field" type="tel" placeholder="Mobile Number (Optional)">
+                            </div>
+                            <textarea id="c_message" class="input-field" placeholder="Write your feedback, questions, or catering requests here..." required style="margin-bottom: 20px;"></textarea>
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==========================================
+         FOOTER
+         ========================================== -->
+    <footer>
+        <div class="container">
+            <div class="footer-logo">
+                <img class="footer-logo-img" src="assets/images/vinayaka.jpeg" onerror="this.src='https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=80';" alt="Vinayaka Tiffins">
+                <h3 style="font-size: 1.15rem; color: var(--text-primary);">Vinayaka Tiffins</h3>
+            </div>
+            <div class="footer-links">
+                <a href="#menuSection">Today's Menu</a>
+                <a href="#weeklySection">Weekly Planner</a>
+                <a href="#mapsSection">Maps</a>
+                <a href="#contactSection">Contact</a>
+            </div>
+            <p class="footer-copy">© 2026 Vinayaka Tiffins. Homemade South Indian breakfast with care.</p>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         MOBILE BOTTOM NAVIGATION BAR
+         ========================================== -->
+    <div class="mobile-nav">
+        <a href="#menuSection" class="mobile-nav-item active" id="mNavMenu">
+            <i class="fas fa-utensils"></i>
+            <span>Menu</span>
+        </a>
+        <a href="#weeklySection" class="mobile-nav-item" id="mNavWeekly">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Planner</span>
+        </a>
+        <a href="#" class="mobile-nav-item" id="mNavProfile" onclick="openLoginModal(); return false;">
+            <i class="fas fa-user-circle"></i>
+            <span>Profile</span>
+        </a>
+        <a href="#" class="mobile-nav-item" id="mNavCart" onclick="openCartPanel(); return false;">
+            <i class="fas fa-shopping-basket"></i>
+            <span>Cart</span>
+        </a>
+    </div>
+
+    <!-- ==========================================
+         MODALS & OVERLAYS
+         ========================================== -->
+
+    <!-- 1. LOGIN & REGISTER MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>User Profile Details</h2>
+                <button class="modal-close-btn" onclick="closeLoginModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <!-- Virtual Holographic Membership Card Preview -->
+                <div class="membership-card-preview" id="membershipCard">
+                    <div class="membership-card-header">
+                        <div class="card-logo-group">
+                            <img class="card-logo" src="assets/images/vinayaka.jpeg" onerror="this.src='https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=50';" alt="">
+                            <span class="card-brand-name">Vinayaka Gold</span>
+                        </div>
+                        <span class="card-tier">Member</span>
+                    </div>
+                    <div class="card-chip"></div>
+                    <div class="card-holder-name" id="cardNameDisplay">GUEST USER</div>
+                    <div class="card-holder-info">
+                        <span id="cardPhoneDisplay">----</span>
+                        <span>EXP: FOREVER</span>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="login-form-tabs">
+                    <button class="login-tab-btn active" id="loginTabBtn" onclick="toggleAuthTab('login')">Login</button>
+                    <button class="login-tab-btn" id="registerTabBtn" onclick="toggleAuthTab('register')">Register New Profile</button>
+                </div>
+
+                <!-- Login Fields -->
+                <div id="loginFormSection" style="display: block;">
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <input id="loginPhone" class="input-field" type="tel" placeholder="Registered Mobile Number">
+                        <input id="loginPassword" class="input-field" type="password" placeholder="Enter Password">
+                        <button onclick="loginUser()" class="btn btn-primary" style="margin-top: 6px;">
+                            <i class="fas fa-sign-in-alt"></i> Login to Profile
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Register Fields -->
+                <div id="registerFormSection" style="display: none;">
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <input id="userName" class="input-field" type="text" placeholder="Full Name">
+                        <input id="userPhone" class="input-field" type="tel" placeholder="Mobile Number">
+                        <input id="userEmail" class="input-field" type="email" placeholder="Email Address">
+                        <input id="userPassword" class="input-field" type="password" placeholder="Create Password">
+                        <input id="houseNo" class="input-field" type="text" placeholder="House / Flat Number">
+                        
+                        <div style="position: relative;">
+                            <textarea id="userAddress" class="input-field" placeholder="Detecting delivery location..." style="min-height: 80px; padding-right: 44px;"></textarea>
+                            <button type="button" onclick="detectLocation()" class="btn btn-secondary btn-icon" style="position: absolute; right: 8px; bottom: 8px;" title="Recalculate Location">
+                                <i class="fas fa-map-marker-alt" style="color: var(--color-primary);"></i>
+                            </button>
+                        </div>
+                        
+                        <button onclick="saveUserDetails()" class="btn btn-success" style="margin-top: 6px;">
+                            <i class="fas fa-save"></i> Save Profile Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Logout State -->
+                <div id="logoutSection" style="display: none; text-align: center; padding: 20px 0;">
+                    <p style="margin-bottom: 20px;">You are currently logged in. Would you like to log out or edit your profile details?</p>
+                    <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 20px;">
+                        <button onclick="logoutUser()" class="btn btn-secondary" style="background-color: var(--color-danger); color: white; border: none;">
+                            <i class="fas fa-sign-out-alt"></i> Log Out
+                        </button>
+                        <button onclick="enableProfileEdit()" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Details
+                        </button>
+                    </div>
+
+                    <!-- Customer Order History Panel -->
+                    <div id="orderHistoryContainer" style="margin-top: 24px; border-top: 1.5px solid var(--border-color); padding-top: 20px; text-align: left;">
+                        <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; color: var(--text-primary);">
+                            <i class="fas fa-history" style="color: var(--color-primary); margin-right: 6px;"></i> Order History & Tracking
+                        </h3>
+                        <div id="orderHistoryList" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 6px;">
+                            <p style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; padding: 10px 0;">No past orders found.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. WEEKLY PLANNER POPUP -->
+    <div class="modal-overlay" id="weeklyPlannerModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>Configure Weekly Breakfast Plan</h2>
+                <button class="modal-close-btn" onclick="closeWeeklyPlanner()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 20px; color: var(--text-secondary); font-size: 0.95rem;">Pick the breakfast items you want to schedule for each day. Once saved, these items will automatically preload in your cart when you visit on that day!</p>
+                <div class="weekly-planner-grid" id="weeklyPlannerContent">
+                    <!-- Days loaded dynamically by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeWeeklyPlanner()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveWeeklyPlan()">
+                    <i class="fas fa-check-circle"></i> Save Tiffin Calendar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. SLIDE-OUT CART PANEL -->
+    <div class="cart-panel-overlay" id="cartPanelOverlay" onclick="closeCartPanel(event)">
+        <div class="cart-panel" onclick="event.stopPropagation()">
+            <div class="cart-panel-header">
+                <h2>Your Order Basket</h2>
+                <button class="modal-close-btn" onclick="closeCartPanel()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="cart-panel-body" id="cartContentWrapper">
+                <!-- Cart Items generated dynamically by Javascript -->
+            </div>
+            <div class="cart-panel-footer">
+                <div class="cart-summary-line">
+                    <span class="cart-total-label">Basket Total:</span>
+                    <span class="cart-total-value" id="cartTotal">₹0</span>
+                </div>
+                
+                <!-- Main CTA which changes context based on login or verification -->
+                <button id="finalConfirmBtn" class="btn btn-primary" style="width: 100%; padding: 14px;" disabled>
+                    <i class="fas fa-lock"></i> Pay First to Confirm
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. UPI PAYMENT DIALOG -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-container" style="max-width: 380px;">
+            <div class="modal-header">
+                <h2>UPI Payment Verification</h2>
+                <button class="modal-close-btn" onclick="closePaymentPopup()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 18px;">Please complete the UPI transfer and paste the Reference / UTR Number to confirm your order.</p>
+                
+                <div id="paymentPopupQR">
+                    <!-- Generated dynamically by app.js -->
+                </div>
+
+                <div style="margin: 20px 0 10px;">
+                    <label for="txnInput" style="display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; text-align: left; text-transform: uppercase; color: var(--text-muted);">UPI Transaction ID / Ref / UTR</label>
+                    <input id="txnInput" type="text" class="input-field" placeholder="Ex: 123456789012" style="text-align: center; font-weight: 700; font-size: 1.1rem; letter-spacing: 1px;">
+                </div>
+                
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4;">
+                    <i class="fas fa-shield-alt" style="color: var(--color-success);"></i> 100% Secure Transfer via BHIM UPI.<br>Order enters kitchen queue immediately after transaction validation.
+                </p>
+
+                <button onclick="verifyTransaction()" class="btn btn-success" style="width: 100%;">
+                    <i class="fas fa-check-double"></i> Verify Transaction ID
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. ACTIVE ORDER STATUS DIALOG -->
+    <div class="modal-overlay" id="activeOrderModal">
+        <div class="modal-container" style="max-width: 480px;">
+            <div class="modal-header">
+                <h2>Track Active Order</h2>
+                <button class="modal-close-btn" onclick="closeActiveOrderModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="activeOrderContent">
+                <!-- Loaded dynamically on checkout -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" style="position: fixed; bottom: 80px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 10000; pointer-events: none;"></div>
+
+    <!-- jsPDF Library for PDF invoice generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
