@@ -742,21 +742,45 @@
             }
         });
 
-        function handleAdminLogin() {
-            const user = document.getElementById("adminUser").value.trim();
-            const pass = document.getElementById("adminPass").value.trim();
+        function handleAuthError() {
+            showToast("Session expired or unauthorized. Logging out...", "error");
+            handleAdminLogout();
+        }
 
-            if (user === "admin" && pass === "vinayaka@admin") {
-                sessionStorage.setItem("admin_session", "active");
-                revealDashboard();
-                showToast("Control Center Authenticated Successfully.", "success");
-            } else {
-                showToast("Access Denied! Incorrect username or password.", "error");
+        async function handleAdminLogin() {
+            const username = document.getElementById("adminUser").value.trim();
+            const password = document.getElementById("adminPass").value.trim();
+
+            if (!username || !password) {
+                showToast("Username and password are required.", "warning");
+                return;
+            }
+
+            try {
+                const response = await fetch(API_BASE_URL + "/api/admin/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    sessionStorage.setItem("admin_token", data.token);
+                    sessionStorage.setItem("admin_session", "active");
+                    revealDashboard();
+                    showToast("Control Center Authenticated Successfully.", "success");
+                } else {
+                    showToast("Access Denied! Incorrect username or password.", "error");
+                }
+            } catch (err) {
+                console.error("Error authenticating admin:", err);
+                showToast("Connection failed! Unable to reach backend server.", "error");
             }
         }
 
         function handleAdminLogout() {
             sessionStorage.removeItem("admin_session");
+            sessionStorage.removeItem("admin_token");
             document.getElementById("adminDashboardWrapper").style.display = "none";
             document.getElementById("adminLoginWrapper").style.display = "flex";
         }
@@ -805,7 +829,13 @@
 
         async function fetchStatsData() {
             try {
-                const response = await fetch(API_BASE_URL + "/api/admin/stats");
+                const response = await fetch(API_BASE_URL + "/api/admin/stats", {
+                    headers: { "X-Admin-Token": sessionStorage.getItem("admin_token") || "" }
+                });
+                if (response.status === 401) {
+                    handleAuthError();
+                    return;
+                }
                 if (response.ok) {
                     const stats = await response.json();
                     document.getElementById("statsEarnings").textContent = `₹${stats.totalSales}`;
@@ -859,7 +889,13 @@
 
         async function fetchOrdersData(silent = false) {
             try {
-                const response = await fetch(API_BASE_URL + "/api/admin/orders");
+                const response = await fetch(API_BASE_URL + "/api/admin/orders", {
+                    headers: { "X-Admin-Token": sessionStorage.getItem("admin_token") || "" }
+                });
+                if (response.status === 401) {
+                    handleAuthError();
+                    return;
+                }
                 if (response.ok) {
                     const orders = await response.json();
                     
@@ -886,7 +922,13 @@
 
         async function fetchUsersData() {
             try {
-                const response = await fetch(API_BASE_URL + "/api/admin/users");
+                const response = await fetch(API_BASE_URL + "/api/admin/users", {
+                    headers: { "X-Admin-Token": sessionStorage.getItem("admin_token") || "" }
+                });
+                if (response.status === 401) {
+                    handleAuthError();
+                    return;
+                }
                 if (response.ok) {
                     const users = await response.json();
                     renderUsersTable(users);
@@ -997,9 +1039,16 @@
             try {
                 const response = await fetch(API_BASE_URL + "/api/admin/orders/status", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "X-Admin-Token": sessionStorage.getItem("admin_token") || ""
+                    },
                     body: JSON.stringify({ orderId, status: newStatus })
                 });
+                if (response.status === 401) {
+                    handleAuthError();
+                    return;
+                }
 
                 if (response.ok) {
                     fetchStatsData();
@@ -1022,7 +1071,13 @@
 
         async function fetchMessagesData() {
             try {
-                const response = await fetch(API_BASE_URL + "/api/admin/messages");
+                const response = await fetch(API_BASE_URL + "/api/admin/messages", {
+                    headers: { "X-Admin-Token": sessionStorage.getItem("admin_token") || "" }
+                });
+                if (response.status === 401) {
+                    handleAuthError();
+                    return;
+                }
                 if (response.ok) {
                     const messages = await response.json();
                     renderMessagesTable(messages);

@@ -9,12 +9,16 @@ Serves the website files and manages DB storage (JSON files) on port 3000.
 import http.server
 import json
 import os
+import secrets
 import sys
 import threading
 import time
 from urllib.parse import urlparse
 
 PORT = int(os.environ.get("PORT", 3000))
+ADMIN_USER = os.environ.get("ADMIN_USER", "admin")
+ADMIN_PASS = os.environ.get("ADMIN_PASS", "vinayaka@admin")
+ADMIN_SESSION_TOKEN = secrets.token_hex(16)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_DIR = os.path.join(BASE_DIR, "db")
 
@@ -108,6 +112,10 @@ class VinayakaHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                               self.log_date_time_string(),
                               format%args))
 
+    def is_admin_authorized(self):
+        token = self.headers.get("X-Admin-Token")
+        return token == ADMIN_SESSION_TOKEN
+
     def send_json_response(self, data, status_code=200):
         try:
             response_bytes = json.dumps(data).encode("utf-8")
@@ -117,7 +125,7 @@ class VinayakaHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             # Enable CORS headers for development flexibility
             self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Admin-Token")
             self.end_headers()
             self.wfile.write(response_bytes)
         except Exception as e:
@@ -128,12 +136,17 @@ class VinayakaHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Admin-Token")
         self.end_headers()
 
     def do_GET(self):
         url_parsed = urlparse(self.path)
         path_str = url_parsed.path
+
+        # Check authorization for all admin API GET endpoints
+        if path_str.startswith("/api/admin/"):
+            if not self.is_admin_authorized():
+                return self.send_json_response({"error": "Unauthorized access"}, 401)
 
         # 1. API: Fetch Weekly Plan for User
         # Route: /api/plans/<phone>
@@ -323,8 +336,21 @@ class VinayakaHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             # Threaded simulation removed. Status will be controlled manually by the admin.
             return self.send_json_response(new_order, 201)
 
+        # Admin Login
+        elif path_str == "/api/admin/login":
+            username = req_data.get("username")
+            password = req_data.get("password")
+            
+            if username == ADMIN_USER and password == ADMIN_PASS:
+                return self.send_json_response({"token": ADMIN_SESSION_TOKEN}, 200)
+            else:
+                return self.send_json_response({"error": "Invalid username or password"}, 401)
+
         # 5. API: Admin Update Order Status
         elif path_str == "/api/admin/orders/status":
+            if not self.is_admin_authorized():
+                return self.send_json_response({"error": "Unauthorized access"}, 401)
+                
             order_id = req_data.get("orderId")
             status = req_data.get("status")
 
