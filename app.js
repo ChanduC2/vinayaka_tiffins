@@ -2,6 +2,62 @@
  * VINAYAKA TIFFINS - PREMIUM WEB INTERACTION ENGINE
  ****************************************************************************/
 
+// Dynamic API Base URL detection
+const API_BASE_URL = (() => {
+  const origin = window.location.origin;
+  const protocol = window.location.protocol;
+  const hostname = window.location.hostname;
+  const port = window.location.port;
+
+  // Check if we have a saved custom backend URL in localStorage (for split hosting)
+  const savedUrl = localStorage.getItem("vinayaka_backend_url");
+  if (savedUrl) return savedUrl;
+
+  // If opened as a local file (file://) or running on a local development server on a different port (e.g. Live Server on port 5500)
+  if (protocol === "file:" || ((hostname === "localhost" || hostname === "127.0.0.1") && port !== "3000")) {
+    return "http://localhost:3000";
+  }
+
+  // Otherwise, use the current origin (relative fetches)
+  return "";
+})();
+
+// Helper function to save backend URL
+function saveBackendUrl() {
+  const input = document.getElementById("backendUrlInput");
+  if (!input) return;
+  let val = input.value.trim();
+  if (val) {
+    // Ensure it doesn't end with a slash
+    if (val.endsWith("/")) {
+      val = val.slice(0, -1);
+    }
+    // Prepend http/https if missing
+    if (!/^https?:\/\//i.test(val)) {
+      val = "http://" + val;
+    }
+    localStorage.setItem("vinayaka_backend_url", val);
+    const status = document.getElementById("backendUrlStatus");
+    if (status) {
+      status.style.display = "block";
+      status.textContent = "Backend URL saved! Reloading...";
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+  } else {
+    localStorage.removeItem("vinayaka_backend_url");
+    const status = document.getElementById("backendUrlStatus");
+    if (status) {
+      status.style.display = "block";
+      status.textContent = "Reset to auto-detect! Reloading...";
+    }
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+  }
+}
+
 // ==========================================
 // 1. DATA STORES & APP STATE
 // ==========================================
@@ -146,6 +202,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Geo-location trigger
   detectLocation();
+
+  // Pre-populate backend server URL setting input
+  const backendInput = document.getElementById("backendUrlInput");
+  if (backendInput) {
+    backendInput.value = localStorage.getItem("vinayaka_backend_url") || "";
+  }
 });
 
 // Splash Screen transition
@@ -571,7 +633,7 @@ async function finalizeOrderCheckout() {
   };
 
   try {
-    const response = await fetch("/api/orders", {
+    const response = await fetch(API_BASE_URL + "/api/orders", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(orderPayload)
@@ -686,7 +748,7 @@ function startOrderStatusSimulator(orderId) {
 
   orderTrackingInterval = setInterval(async () => {
     try {
-      const response = await fetch(`/api/orders/${orderId}`);
+      const response = await fetch(API_BASE_URL + `/api/orders/${orderId}`);
       if (response.ok) {
         const updatedOrder = await response.json();
         activeOrder = updatedOrder;
@@ -801,7 +863,7 @@ async function saveUserDetails() {
   }
 
   try {
-    const response = await fetch("/api/auth/register", {
+    const response = await fetch(API_BASE_URL + "/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, phone, email, password, house, address })
@@ -835,7 +897,7 @@ async function loginUser() {
   }
 
   try {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch(API_BASE_URL + "/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ phone, password })
@@ -931,7 +993,7 @@ let weeklyPlan = {};
 async function initWeeklyPlannerState() {
   if (!userData.phone) return;
   try {
-    const response = await fetch(`/api/plans/${userData.phone}`);
+    const response = await fetch(API_BASE_URL + `/api/plans/${userData.phone}`);
     if (response.ok) {
       weeklyPlan = await response.json();
     }
@@ -1025,7 +1087,7 @@ async function saveWeeklyPlan() {
   });
 
   try {
-    const response = await fetch("/api/plans", {
+    const response = await fetch(API_BASE_URL + "/api/plans", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ phone: userData.phone, plan: weeklyPlan })
@@ -1276,7 +1338,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        const response = await fetch("/api/messages", {
+        const response = await fetch(API_BASE_URL + "/api/messages", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, phone, message })
@@ -1306,7 +1368,7 @@ async function loadUserOrderHistory() {
   if (!container || !userData.phone) return;
 
   try {
-    const response = await fetch(`/api/orders/user/${userData.phone}`);
+    const response = await fetch(API_BASE_URL + `/api/orders/user/${userData.phone}`);
     if (response.ok) {
       const orders = await response.json();
       renderOrderHistoryList(orders);
@@ -1374,7 +1436,7 @@ function renderOrderHistoryList(orders) {
 
 async function trackSpecificOrder(orderId) {
   try {
-    const response = await fetch(`/api/orders/${orderId}`);
+    const response = await fetch(API_BASE_URL + `/api/orders/${orderId}`);
     if (response.ok) {
       const order = await response.json();
       activeOrder = order;
@@ -1395,7 +1457,7 @@ async function trackSpecificOrder(orderId) {
 
 async function downloadSpecificPDFReceipt(orderId) {
   try {
-    const response = await fetch(`/api/orders/${orderId}`);
+    const response = await fetch(API_BASE_URL + `/api/orders/${orderId}`);
     if (response.ok) {
       const order = await response.json();
       generatePDFReceipt(
